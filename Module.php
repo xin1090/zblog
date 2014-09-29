@@ -1,5 +1,6 @@
 <?php
 namespace Blog;
+use Zend\Mvc\ModuleRouteListener;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 class Module implements ServiceProviderInterface
@@ -19,6 +20,14 @@ class Module implements ServiceProviderInterface
             ),
         );
     }
+   public function onBootstrap($e) {
+        $e->getApplication()->getServiceManager()->get('translator');
+        $eventManager = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+    }
+
+
     // 数据库操作配置
     public function getServiceConfig()
     {
@@ -39,10 +48,9 @@ class Module implements ServiceProviderInterface
         );
     }
     // 控制器自动加载配置
-    public function getControllerConfig()
-    {
+    public function getControllerConfig(){
         return array(
-             'abstract_factories'=>array('Blog\Services\CommonControlAppAbstractFactory'),
+            'abstract_factories'=>array('Blog\Services\CommonControlAppAbstractFactory')
         );
     }
 

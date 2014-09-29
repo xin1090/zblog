@@ -1,16 +1,38 @@
 <?php
 return array(
-	'router' => array(
-		'home' => array(
-			'type' => 'segment',
-			'optins' => array(
-				'route' => '/',
-				'defaults' => array(
-					'controller' => 'Blog\Controller\Index',
-				),
-			),
-		),#主页路由
-	),#路由配置
+    'router' => array(
+        'routes' => array(
+            'home' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Blog\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+        ),
+    ),
+    'controllers' => array(
+        'invokables' => array(
+            'Blog\Controller\Index' => 'Blog\Controller\IndexController',
+        ),
+    ),
+    'service_manager' => array(
+        'abstract_factories' => array(
+            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+            'Zend\Log\LoggerAbstractServiceFactory',
+        ),
+        'aliases' => array(
+            'translator' => 'MvcTranslator',
+        ),
+    ),
+
 	'view_manager' => array(
 	    'display_not_found_reason' => true,
 	    'display_exceptions'       => true,
@@ -19,8 +41,7 @@ return array(
 	    'exception_template'       => 'error/index',
 	    'template_map' => array(
 	        'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-	        'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
-	        'application/test/index'  => __DIR__ . '/../view/application/index/test.phtml',
+	        'Blog/index/index' => __DIR__ . '/../view/Blog/index/index.phtml',
 	        'error/404'               => __DIR__ . '/../view/error/404.phtml',
 	        'error/index'             => __DIR__ . '/../view/error/index.phtml',
 	    ),
